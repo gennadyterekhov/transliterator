@@ -1,0 +1,36 @@
+
+{{define "aboutApi"}}
+{{template "header"}}
+{{template "navigation"}}
+
+{{template "contentStart"}}
+
+<h1>About API</h1>
+<pre>
+right now there's only one endpoint available  
+POST /api/transliterate  
+Content-Type: application/json  
+
+request example:  
+
+    {
+        "from": "cyrillic",
+        "to": "latin",
+        "text": "привет"
+    }
+
+response example:
+
+    {
+        "ok": true,
+        "from": "cyrillic",
+        "to": "latin",
+        "text": "privet"
+    }
+</pre>
+ 
+
+{{template "contentEnd"}}
+{{template "footer"}}
+
+{{end}}
