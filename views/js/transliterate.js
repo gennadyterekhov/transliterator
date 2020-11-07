@@ -110,8 +110,8 @@ class MainComponent extends React.Component {
         // var responseData = {};
         $.ajax(
             {
-                url: "http://localhost:8000/api/transliterate",
-                // url: "https://golang-react-transliterator.herokuapp.com/api/transliterate",
+                // url: "http://localhost:8000/api/transliterate",
+                url: "https://golang-react-transliterator.herokuapp.com/api/transliterate",
                 method: "POST",
                 data: dataToSend
             }
