@@ -95,6 +95,9 @@ class MainComponent extends React.Component {
         // }
         this.setState({inputValue: event.target.value});
 
+        // let currentUrl = window.location.origin;
+        // console.log(currentUrl);
+
         let selectTransliterateFrom = $("#selectTransliterateFrom option:selected")[0].value;
         // console.log(selectTransliterateFrom);
         // .find("option")[0].value
@@ -110,8 +113,9 @@ class MainComponent extends React.Component {
         // var responseData = {};
         $.ajax(
             {
+                url: window.location.origin + "/api/transliterate",
                 // url: "http://localhost:8000/api/transliterate",
-                url: "https://golang-react-transliterator.herokuapp.com/api/transliterate",
+                // url: "https://golang-react-transliterator.herokuapp.com/api/transliterate",
                 method: "POST",
                 data: dataToSend
             }
