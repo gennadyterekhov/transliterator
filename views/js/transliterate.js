@@ -6,22 +6,38 @@ const formElement = React.createElement;
 class MainComponent extends React.Component {
     constructor(props) {
         super(props);
+        let optionsFrom = ['cyrillic'];
+        let optionsTo = ['latin', 'arabic'];
 
-        let players = [
-            {name: 'Игрок 1', score: 0},
-            {name: 'Игрок 2', score: 0}
-        ];
-
+        optionsFrom = this.enrichOptions(optionsFrom);
+        optionsTo = this.enrichOptions(optionsTo);
 
         this.state = {
+            optionsFrom,
+            optionsTo,
             inputPlaceholder: 'Input',
             outputPlaceholder: 'Output',
             inputValue: '',
             outputValue: '',
         };
         this.handleOutputChange = this.handleOutputChange.bind(this);
-        this.handleChange = this.handleChange.bind(this);
+        this.handleInputChange = this.handleInputChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
+    }
+
+    capitalizeFirstLetter(string) {
+        return string.charAt(0).toUpperCase() + string.slice(1);
+    }
+
+
+    enrichOptions(arr) {
+        let obj = [];
+        for (let i = 0; i < arr.length; i += 1) {
+            obj[i] = {lower: '', upper: ''};
+            obj[i].lower = arr[i];
+            obj[i].upper = this.capitalizeFirstLetter(arr[i]);
+        }
+        return obj;
     }
 
 
@@ -65,25 +81,37 @@ class MainComponent extends React.Component {
     }
 
     handleOutputChange(event) {
-        this.setState({inputValue: event.target.value});
+        // this.setState({inputValue: event.target.value});
+        this.setState({outputValue: event.target.value});
+        // this.setState({outputValue: this.state.outputValue});
     }
 
-    handleChange(event) {
+
+
+
+    handleInputChange(event) {
+        // console.log(event.target.id);
+        // if (event.target.id == 'inputTextarea') {
+        // }
         this.setState({inputValue: event.target.value});
 
-
+        let selectTransliterateFrom = $("#selectTransliterateFrom option:selected")[0].value;
+        // console.log(selectTransliterateFrom);
+        // .find("option")[0].value
+        let selectTransliterateTo = $("#selectTransliterateTo option:selected")[0].value;
+        // console.log(selectTransliterateTo);
 
         let dataToSend = JSON.stringify({
-            "from": "cyrillic",
-            "to": "latin",
+            "from": selectTransliterateFrom,
+            "to": selectTransliterateTo,
             "text": event.target.value 
         });
-        console.log(dataToSend);
+        // console.log(dataToSend);
         // var responseData = {};
         $.ajax(
             {
-                // url: "http://localhost:8000/api/transliterate",
-                url: "https://golang-react-transliterator.herokuapp.com/api/transliterate",
+                url: "http://localhost:8000/api/transliterate",
+                // url: "https://golang-react-transliterator.herokuapp.com/api/transliterate",
                 method: "POST",
                 data: dataToSend
             }
@@ -100,7 +128,7 @@ class MainComponent extends React.Component {
             })
         
         // console.log(responseData);
-        return responseData;
+        // return responseData;
 
 
     }
@@ -127,17 +155,27 @@ class MainComponent extends React.Component {
 
                     {/* <form onSubmit={this.handleSubmit}> */}
                     <label htmlFor="from">From&nbsp;</label>
-                    <select name="from" id="from" defaultValue="cyrillic">
-                        <option value="cyrillic">Cyrillic</option>
+                    <select className="custom-select d-block w-75" name="from" id="selectTransliterateFrom" defaultValue="cyrillic" onChange={this.handleSelectChange}>
+                        {/* <option value="cyrillic">Cyrillic</option> */}
+
+                        {this.state.optionsFrom.map(
+                            (value, index) => (
+                                <option key={index} value={value.lower}>
+                                    {value.upper}
+                                </option>
+                            )
+                        )}
+
                     </select>
                     <br></br>
 
                     {/* <label for="inputTextarea">Input</label> */}
                     <textarea
+                        className="form-control d-block w-75"
                         id="inputTextarea"
                         name="inputTextarea"
                         rows="20" cols="50"
-                        onChange={this.handleChange}
+                        onChange={this.handleInputChange}
                         placeholder={this.state.inputPlaceholder}
                         value={this.state.inputValue}
                     >
@@ -154,19 +192,30 @@ class MainComponent extends React.Component {
                     <br></br>
 
                     <label htmlFor="to">To&nbsp;</label>
-                    <select name="to" id="to" defaultValue="latin">
-                        <option value="latin">Latin</option>
+                    <select className="custom-select d-block w-75" name="to" id="selectTransliterateTo" defaultValue="latin" onChange={this.handleSelectChange}>
+                        {/* <option value="latin">Latin</option>
+                        <option value="arabic">Arabic</option> */}
+
+                        {this.state.optionsTo.map(
+                            (value, index) => (
+                                <option key={index} value={value.lower}>
+                                    {value.upper}
+                                </option>
+                            )
+                        )}
+
                     </select>
                     <br></br>
                     {/* <label for="outputTextarea">Output</label> */}
                     <textarea
+                        className="form-control d-block w-75"
                         id="outputTextarea"
                         name="outputTextarea"
                         rows="20" cols="50"
                         onChange={this.handleOutputChange}
                         placeholder={this.state.outputPlaceholder}
                         value={this.state.outputValue}
-                        readOnly
+                        // readOnly
                     >
                         {this.state.outputValue}
                     </textarea>

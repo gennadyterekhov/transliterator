@@ -6,28 +6,63 @@
 {{template "contentStart"}}
 
 <h1>About API</h1>
-<pre>
+<br>
+<div class="row">
+    <div class="col">
+        <pre>
 right now there's only one endpoint available  
 POST /api/transliterate  
-Content-Type: application/json  
+Content-Type: application/json
 
-request example:  
+possible "from" values: ["cyrillic"]
+possible "to" values: ["latin", "arabic"]
+        </pre>
+        
 
-    {
-        "from": "cyrillic",
-        "to": "latin",
-        "text": "привет"
-    }
-
-response example:
-
-    {
-        "ok": true,
-        "from": "cyrillic",
-        "to": "latin",
-        "text": "privet"
-    }
-</pre>
+    </div>
+</div>
+<div class="row">
+    <div class="col">
+        <pre>
+        request example:  
+        
+            {
+                "from": "cyrillic",
+                "to": "latin",
+                "text": "привет"
+            }
+        
+        response example:
+        
+            {
+                "ok": true,
+                "from": "cyrillic",
+                "to": "latin",
+                "text": "privet"
+            }
+        </pre>
+    </div>
+    <div class="col">
+        <pre>
+            request example:  
+            
+                {
+                    "from": "cyrillic",
+                    "to": "arabic",
+                    "text": "привет"
+                }
+            
+            response example:
+            
+                {
+                    "ok": true,
+                    "from": "cyrillic",
+                    "to": "arabic",
+                    "text": "پريڤعت"
+                }
+            </pre>
+    </div>
+</div>
  
 
 {{template "contentEnd"}}

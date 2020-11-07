@@ -1,42 +1,49 @@
 package transliterate
 
-import "os"
+import (
+	"fmt"
+	"os"
+)
 
-func TransliterateFromCyrillicToLatin(msg string) string {
-	// local
-	// var cyrillic string = config.GetConfig().Cyrillic
-	// var latin string = config.GetConfig().Latin
-	// prod
-	var cyrillic string = os.Getenv("cyrillic")
-	var latin string = os.Getenv("latin")
+func Transliterate(from string, to string, text string) string {
 
+	var original string = os.Getenv(from)
+	var transliterated string = os.Getenv(to)
+
+	if original == "" || transliterated == "" {
+		fmt.Println("[error] transliteration not possible. variables not found in .env. unsupported alphabets.")
+		return "[error] transliteration not possible. variables not found in .env. unsupported alphabets."
+	}
+	// количество символов в кириллице *2
+	// если добавлять другие источники транслитерации то нужно это решать, убирать хардкод
 	const numberOfChars int = 66
+	// return fmt.Sprintf("%s %d", original, len(original))
 
-	var cyrillicRunes [numberOfChars]rune
-	var latinRunes [numberOfChars]rune
+	var originalRunes [numberOfChars]rune
+	var transliteratedRunes [numberOfChars]rune
 	var trans string = ""
 
 	var correspondence map[rune]rune = make(map[rune]rune)
 
 	var j uint8 = 0
-	for _, runeValue := range cyrillic {
-		cyrillicRunes[j] = runeValue
+	for _, runeValue := range original {
+		originalRunes[j] = runeValue
 		j += 1
 	}
 	j = 0
-	for _, runeValue := range latin {
-		latinRunes[j] = runeValue
+	for _, runeValue := range transliterated {
+		transliteratedRunes[j] = runeValue
 		j += 1
 	}
 
 	for i := 0; i < numberOfChars; i += 1 {
-		correspondence[cyrillicRunes[i]] = latinRunes[i]
+		correspondence[originalRunes[i]] = transliteratedRunes[i]
 	}
 
-	for _, runeValue := range msg {
-		if latinChar, ok := correspondence[runeValue]; ok {
+	for _, runeValue := range text {
+		if transliteratedChar, ok := correspondence[runeValue]; ok {
 			//do something here
-			trans += string(latinChar)
+			trans += string(transliteratedChar)
 		} else {
 			trans += string(runeValue)
 		}
@@ -44,12 +51,4 @@ func TransliterateFromCyrillicToLatin(msg string) string {
 	}
 
 	return trans
-
-}
-
-func Transliterate(from string, to string, text string) string {
-	if from == "cyrillic" && to == "latin" {
-		return TransliterateFromCyrillicToLatin(text)
-	}
-	return "a"
 }
